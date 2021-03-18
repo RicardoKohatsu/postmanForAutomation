@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "90e25039-1439-49c8-bdc0-3791a9279b39",
+		"name": "Automation Example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Scenario 1",
+			"item": [
+				{
+					"name": "01 .Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validation.status_code(postman, 201)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(environment._preRequestFunction)().request.getFirstId()"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://jsonplaceholder.typicode.com/posts/{{firstId}}",
+							"protocol": "https",
+							"host": [
+								"jsonplaceholder",
+								"typicode",
+								"com"
+							],
+							"path": [
+								"posts",
+								"{{firstId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a specific post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validation.status_code(postman, 200)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://jsonplaceholder.typicode.com/posts/1",
+							"protocol": "https",
+							"host": [
+								"jsonplaceholder",
+								"typicode",
+								"com"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Scenario 2",
+			"item": [
+				{
+					"name": "02. Get all posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validation.status_code(postman, 200)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://jsonplaceholder.typicode.com/posts/",
+							"protocol": "https",
+							"host": [
+								"jsonplaceholder",
+								"typicode",
+								"com"
+							],
+							"path": [
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validation.status_code(postman, 200)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"title\": \"test title\",\n    \"body\": \"test body\",\n    \"userId\": 1\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://jsonplaceholder.typicode.com/posts/1",
+							"protocol": "https",
+							"host": [
+								"jsonplaceholder",
+								"typicode",
+								"com"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a specific post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validation.status_code(postman, 200)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://jsonplaceholder.typicode.com/posts/1",
+							"protocol": "https",
+							"host": [
+								"jsonplaceholder",
+								"typicode",
+								"com"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"postman.setEnvironmentVariable(\"_preRequestFunction\", () => {",
+					"    var getFirstId = () => {",
+					"        var request = {",
+					"            \"url\": \"https://jsonplaceholder.typicode.com/posts/\",",
+					"            \"method\": \"GET\"",
+					"        }                                        ",
+					"        pm.sendRequest(request, (err, res) => {",
+					"            console.log(\"response body - \" + JSON.stringify(res.json()))  ",
+					"            var response = res.json();",
+					"            console.log(response[0].id)",
+					"            postman.setEnvironmentVariable(\"firstId\", response[0].id);",
+					"        })",
+					"    }",
+					"    return {",
+					"        request: {",
+					"            getFirstId",
+					"        }",
+					"    };",
+					"})",
+					"",
+					"//List of all scenario first request in order of execution",
+					"var scenariosFirstRequest = [",
+					"    //Scenario 1",
+					"    \"01 .Delete a post\",",
+					"    //Scenario 2",
+					"    \"02. Get all posts\"",
+					"]",
+					"",
+					"function runByScenario() {",
+					"    console.log(\"Start\")",
+					"    //Check scenariosFirstRequest contains requestName",
+					"    var index = scenariosFirstRequest.indexOf(pm.info.requestName)",
+					"    ",
+					"    //If >= 0, the requestName is a first request of scenario",
+					"    if (index >= 0) {",
+					"        console.log(\"Start actions of Scenario First Request\")",
+					"        console.log(\"Current Scenario First Request is: \" + scenariosFirstRequest[index])",
+					"        postman.setEnvironmentVariable(\"_currentScenarioFirstRequest\", scenariosFirstRequest[index]);",
+					"        environmentVariablesValueClean()",
+					"        //Check if exist next scenario and store the name of next scenario first request",
+					"        if (index < scenariosFirstRequest.length - 1) {",
+					"            console.log(\"Next Scenario First Request is: \" + scenariosFirstRequest[index + 1])",
+					"            postman.setEnvironmentVariable(\"_nextScenarioFirstRequest\", scenariosFirstRequest[index + 1]);",
+					"            //If is the last scenario, the next is equal null",
+					"        } else {",
+					"            console.log(\"Current scenario is the last, nextScenario is null\")",
+					"            postman.setEnvironmentVariable(\"_nextScenarioFirstRequest\", null);",
+					"        }",
+					"    }",
+					"}",
+					"",
+					"//Clean all environment variables without prefix '_'",
+					"function environmentVariablesValueClean() {",
+					"    console.log(\"Clean all test variable\");",
+					"    const clean = _.keys(pm.environment.toObject())",
+					"    _.each(clean, (arrItem) => {",
+					"        if (!arrItem.startsWith(\"_\")) {",
+					"            console.log(\"Clean variable: \" + arrItem);",
+					"            pm.environment.set(arrItem, null);",
+					"        }",
+					"    })",
+					"}",
+					"",
+					"runByScenario();"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"validation = {",
+					"",
+					"    status_code: function (postman, status_code) {",
+					"        var qtd_fail = 0;",
+					"        pm.test(\"Status code is \"+ status_code, function () {",
+					"            qtd_fail ++;",
+					"            pm.response.to.have.status(status_code);",
+					"            qtd_fail --;",
+					"        });",
+					"",
+					"        util.runByScenario(postman, qtd_fail)",
+					"    }",
+					"}",
+					"",
+					"util ={",
+					"    runByScenario(postman, qtd_fail){",
+					"        if (qtd_fail > 0){",
+					"            console.log(\"runByScenario\")",
+					"            var nextRequest = postman.getEnvironmentVariable(\"_nextScenarioFirstRequest\")",
+					"            postman.setNextRequest(nextRequest);",
+					"            console.log(\"nextRequest = \" + nextRequest)",
+					"        }",
+					"        }",
+					"    }",
+					""
+				]
+			}
+		}
+	]
+}
